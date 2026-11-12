@@ -5,6 +5,8 @@ export type Clef = 'treble' | 'bass';
 export interface Level {
   id: number;
   name: string;
+  /** Sea creature for the level card; they get bigger as the levels get harder. */
+  fish: string;
   notes: number[];
   /** Which clef to draw a given note in. */
   clefFor: (midi: number) => Clef;
@@ -20,12 +22,12 @@ const byRange = (midi: number): Clef =>
 const range = (lo: string, hi: string) => naturalsBetween(noteToMidi(lo), noteToMidi(hi));
 
 export const LEVELS: Level[] = [
-  { id: 1, name: 'Treble C to G', notes: range('C4', 'G4'), clefFor: () => 'treble' },
-  { id: 2, name: 'Bass F to C', notes: range('F3', 'C4'), clefFor: () => 'bass' },
-  { id: 3, name: 'Middle C', notes: range('A3', 'E4'), clefFor: byRange },
-  { id: 4, name: 'Treble C to C', notes: range('C4', 'C5'), clefFor: () => 'treble' },
-  { id: 5, name: 'Bass C to C', notes: range('C3', 'C4'), clefFor: () => 'bass' },
-  { id: 6, name: 'Grand staff', notes: range('C3', 'C5'), clefFor: byRange },
+  { id: 1, name: 'Treble C to G', fish: '🐟', notes: range('C4', 'G4'), clefFor: () => 'treble' },
+  { id: 2, name: 'Bass F to C', fish: '🐠', notes: range('F3', 'C4'), clefFor: () => 'bass' },
+  { id: 3, name: 'Middle C', fish: '🐡', notes: range('A3', 'E4'), clefFor: byRange },
+  { id: 4, name: 'Treble C to C', fish: '🦈', notes: range('C4', 'C5'), clefFor: () => 'treble' },
+  { id: 5, name: 'Bass C to C', fish: '🐬', notes: range('C3', 'C4'), clefFor: () => 'bass' },
+  { id: 6, name: 'Grand staff', fish: '🐋', notes: range('C3', 'C5'), clefFor: byRange },
 ];
 
 export const ROUND_LENGTH = 10;

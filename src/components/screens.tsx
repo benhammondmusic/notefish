@@ -43,6 +43,7 @@ export function HomeScreen({ bestStars, onPlay, onTune, onSecretTap }: HomeProps
       <div className="levels">
         {LEVELS.map((l) => (
           <button key={l.id} className="level-card" onClick={() => onPlay(l.id)}>
+            <span className="level-fish">{l.fish}</span>
             <span className="level-num">{l.id}</span>
             <span className="level-name">{l.name}</span>
             <Stars count={bestStars[l.id] ?? 0} />
@@ -52,6 +53,7 @@ export function HomeScreen({ bestStars, onPlay, onTune, onSecretTap }: HomeProps
       <button className="link-button" onClick={onTune}>
         🎛️ Grown-ups: tune-up
       </button>
+      <Sea />
     </main>
   );
 }
@@ -69,8 +71,15 @@ interface EndProps {
 export function EndScreen({ stars, firstTry, total, hasNext, onAgain, onNext, onHome }: EndProps) {
   return (
     <main className="screen end">
-      <div className="end-fish">🐟</div>
       <Stars count={stars} />
+      {/* Every first-try note is a fish caught; the rest got away as bubbles. */}
+      <div className="catch" aria-label={`${firstTry} fish caught`}>
+        {Array.from({ length: total }, (_, i) => (
+          <span key={i} className={i < firstTry ? 'caught' : 'bubble'} style={{ animationDelay: `${0.6 + i * 0.08}s` }}>
+            {i < firstTry ? '🐟' : '🫧'}
+          </span>
+        ))}
+      </div>
       <p className="parent-note">
         {firstTry} of {total} on the first try
       </p>
@@ -88,6 +97,20 @@ export function EndScreen({ stars, firstTry, total, hasNext, onAgain, onNext, on
         )}
       </div>
     </main>
+  );
+}
+
+/** Decorative fish swimming along the bottom of the screen, with rising bubbles. */
+export function Sea() {
+  return (
+    <div className="sea" aria-hidden>
+      <span className="swimmer s1">🐟</span>
+      <span className="swimmer s2">🐠</span>
+      <span className="swimmer s3">🐡</span>
+      {[12, 30, 55, 72, 88].map((left, i) => (
+        <span key={left} className="rising" style={{ left: `${left}%`, animationDelay: `${i * 1.3}s` }} />
+      ))}
+    </div>
   );
 }
 

@@ -29,7 +29,7 @@ function FeedbackView({ feedback, hearing }: { feedback: Feedback; hearing: bool
           <span className="feedback-icon jump">🐟</span>
           <span className="feedback-text">Yes!</span>
           <span className="confetti" aria-hidden>
-            {['✨', '🎉', '✨', '🎉', '✨'].map((c, i) => (
+            {['🫧', '🐟', '✨', '🐠', '🫧'].map((c, i) => (
               <span key={i} style={{ animationDelay: `${i * 0.06}s`, left: `${10 + i * 20}%` }}>
                 {c}
               </span>
@@ -40,7 +40,8 @@ function FeedbackView({ feedback, hearing }: { feedback: Feedback; hearing: bool
     case 'octave':
       return (
         <div className="feedback octave">
-          <span className="feedback-icon arrow">{feedback.direction === 'higher' ? '➡️' : '⬅️'}</span>
+          {/* Higher on the piano is to the right; the fish swims that way. */}
+          <span className={`feedback-icon swim-${feedback.direction === 'higher' ? 'right' : 'left'}`}>🐟</span>
           <span className="feedback-text">
             Right note name! Try the one {feedback.direction}.
           </span>
@@ -49,21 +50,21 @@ function FeedbackView({ feedback, hearing }: { feedback: Feedback; hearing: bool
     case 'wrong':
       return (
         <div className="feedback wrong">
-          <span className="feedback-icon">🤔</span>
+          <span className="feedback-icon puff">🐡</span>
           <span className="feedback-text">Not quite, try again.</span>
         </div>
       );
     case 'unclear':
       return (
         <div className="feedback unclear">
-          <span className="feedback-icon">👂</span>
+          <span className="feedback-icon">🫧</span>
           <span className="feedback-text">I couldn't hear that, try again.</span>
         </div>
       );
     case 'reveal':
       return (
         <div className="feedback reveal">
-          <span className="feedback-icon">⭐</span>
+          <span className="feedback-icon">🐠</span>
           <span className="feedback-text">Here it is! Play the star key.</span>
         </div>
       );
@@ -111,9 +112,15 @@ export function PlayScreen({ levelId, a4Hz, onDone, onHome }: Props) {
           🏠
         </button>
         <div className="progress" aria-label={`Note ${round.index + 1} of ${ROUND_LENGTH}`}>
-          {round.prompts.map((_, i) => (
-            <span key={i} className={i < round.index ? 'dot done' : i === round.index ? 'dot now' : 'dot'} />
-          ))}
+          {round.prompts.map((_, i) =>
+            i === round.index ? (
+              <span key={i} className="dot now">
+                🐟
+              </span>
+            ) : (
+              <span key={i} className={i < round.index ? 'dot done' : 'dot'} />
+            ),
+          )}
         </div>
         {round.revealed ? (
           <button className="icon-button" onClick={() => dispatch({ type: 'advance' })} aria-label="Skip">

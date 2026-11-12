@@ -1,5 +1,7 @@
 # notefish
 
+**Play it: https://benhammondmusic.github.io/notefish/**
+
 A piano note-reading game for kids (roughly ages 5 to 10). The app shows one note on a grand staff, the child plays that key on a real acoustic piano, and the app listens through the device microphone to check the exact pitch: right letter **and** right octave.
 
 Built for an iPad or iPhone propped on the piano's music stand. Runs entirely in the browser: no backend, no cloud audio, no native wrapper.
@@ -65,6 +67,8 @@ Open the printed `https://` URL on the device. No certificate warning.
 **Debugging on device:** open `?debug=1` to see live Hz, nearest note, cents, clarity, RMS, noise floor, onset events, and the microphone track settings iOS actually applied. For console logs, connect the device to a Mac and use Safari's Develop menu.
 
 ## Deployment
+
+Pushes to `main` deploy automatically to GitHub Pages via `.github/workflows/pages.yml` (tests must pass first).
 
 `npm run build` produces a fully static site in `dist/`. Host it anywhere that serves HTTPS: GitHub Pages, Netlify, Cloudflare Pages, S3 + CloudFront, and so on. The build uses relative asset paths, so it works from a sub-path such as `https://user.github.io/notefish/`.
 
