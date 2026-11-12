@@ -5,6 +5,7 @@ import { judge } from '../music/scoring';
 import { newRound, roundReducer, type Feedback } from '../game/round';
 import { GrandStaff } from './GrandStaff';
 import { Keyboard } from './Keyboard';
+import { Icon } from './Icon';
 
 interface Props {
   levelId: number;
@@ -19,8 +20,12 @@ function FeedbackView({ feedback, hearing }: { feedback: Feedback; hearing: bool
   switch (feedback.kind) {
     case 'listening':
       return (
-        <div className={`feedback listening ${hearing ? 'hearing' : ''}`}>
-          <span className="feedback-icon">👂</span>
+        <div className={`feedback listening ${hearing ? 'hearing' : ''}`} aria-label="Listening">
+          <span className="listen-rings" aria-hidden>
+            <i />
+            <i />
+            <i />
+          </span>
         </div>
       );
     case 'correct':
@@ -29,7 +34,7 @@ function FeedbackView({ feedback, hearing }: { feedback: Feedback; hearing: bool
           <span className="feedback-icon jump">🐟</span>
           <span className="feedback-text">Yes!</span>
           <span className="confetti" aria-hidden>
-            {['🫧', '🐟', '✨', '🐠', '🫧'].map((c, i) => (
+            {['🫧', '🐟', '🫧', '🐠', '🫧'].map((c, i) => (
               <span key={i} style={{ animationDelay: `${i * 0.06}s`, left: `${10 + i * 20}%` }}>
                 {c}
               </span>
@@ -109,7 +114,7 @@ export function PlayScreen({ levelId, a4Hz, onDone, onHome }: Props) {
     <main className="screen play">
       <header className="play-bar">
         <button className="icon-button" onClick={onHome} aria-label="Home">
-          🏠
+          <Icon name="home" size={28} />
         </button>
         <div className="progress" aria-label={`Note ${round.index + 1} of ${ROUND_LENGTH}`}>
           {round.prompts.map((_, i) =>
@@ -123,8 +128,8 @@ export function PlayScreen({ levelId, a4Hz, onDone, onHome }: Props) {
           )}
         </div>
         {round.revealed ? (
-          <button className="icon-button" onClick={() => dispatch({ type: 'advance' })} aria-label="Skip">
-            ⏭
+          <button className="icon-button" onClick={() => dispatch({ type: 'advance' })} aria-label="Skip this note">
+            <Icon name="skip" size={26} />
           </button>
         ) : (
           <span className="icon-button placeholder" />

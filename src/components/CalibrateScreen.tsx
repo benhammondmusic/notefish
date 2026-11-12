@@ -16,7 +16,7 @@ type Phase =
 
 interface Props {
   onSave: (a4Hz: number) => void;
-  onSkip: () => void;
+  onCancel: () => void;
 }
 
 function describeCents(cents: number): string {
@@ -25,7 +25,7 @@ function describeCents(cents: number): string {
   return `Your piano is about ${c} cents ${cents < 0 ? 'flat' : 'sharp'}; that's fine, we adjusted.`;
 }
 
-export function CalibrateScreen({ onSave, onSkip }: Props) {
+export function CalibrateScreen({ onSave, onCancel }: Props) {
   const [phase, setPhase] = useState<Phase>({ kind: 'listening' });
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export function CalibrateScreen({ onSave, onSkip }: Props) {
             <>
               <p className="kid-text">Play the A in the middle of the piano.</p>
               <p className="parent-note">
-                Grown-ups: that's the A just above middle C (marked with a star). notefish measures it so an
+                That's the A just above middle C (marked with a star). notefish measures it so a very
                 out-of-tune piano still scores correctly.
               </p>
               {phase.kind === 'unclear' && <p className="hint">I couldn't hear that clearly. Play the A again, firmly.</p>}
@@ -74,8 +74,8 @@ export function CalibrateScreen({ onSave, onSkip }: Props) {
             </button>
           </>
         ) : (
-          <button className="big-button secondary wide" onClick={onSkip}>
-            Skip (standard tuning)
+          <button className="big-button secondary wide" onClick={onCancel}>
+            Cancel
           </button>
         )}
       </div>

@@ -103,26 +103,96 @@ button {
   font-size: clamp(20px, 3.5vmin, 28px);
 }
 
+.icon {
+  display: block;
+}
+.big-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 .icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 64px;
   height: 64px;
   border: none;
-  border-radius: 18px;
+  border-radius: 50%;
   background: var(--card);
-  font-size: 32px;
+  color: var(--accent);
   box-shadow: 0 4px 0 var(--line);
+}
+.icon-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--line);
+}
+.icon-button.corner {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  width: 52px;
+  height: 52px;
+  color: var(--muted);
+  box-shadow: none;
+  background: transparent;
+}
+.icon-button.corner.left {
+  right: auto;
+  left: max(16px, env(safe-area-inset-left));
+}
+
+.pill-button {
+  min-height: 52px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 18px;
+  font-weight: 600;
+}
+.pill-button.secondary {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* ---------- options ---------- */
+
+.options {
+  position: relative;
+  justify-content: flex-start;
+  padding-top: max(32px, env(safe-area-inset-top));
+}
+.options h2 {
+  margin: 8px 0 0;
+  font-size: 32px;
+}
+.option-card {
+  width: min(100%, 560px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--card);
+  text-align: left;
+}
+.option-card h3 {
+  margin: 0;
+  font-size: 22px;
+}
+.option-value {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.option-card .row {
+  justify-content: flex-start;
 }
 .icon-button.placeholder {
   visibility: hidden;
-}
-
-.link-button {
-  border: none;
-  background: none;
-  color: var(--muted);
-  font-size: 18px;
-  padding: 16px;
-  min-height: 48px;
 }
 
 .row {
@@ -340,7 +410,48 @@ button {
   color: var(--warn);
 }
 .message-icon {
-  font-size: clamp(72px, 16vmin, 128px);
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--accent);
+}
+
+/* Listening: soft concentric rings that swell while the mic hears sound. */
+.listen-rings {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+.listen-rings i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  opacity: 0;
+  animation: ring 2.4s ease-out infinite;
+}
+.listen-rings i:nth-child(2) {
+  animation-delay: 0.8s;
+}
+.listen-rings i:nth-child(3) {
+  animation-delay: 1.6s;
+}
+@keyframes ring {
+  from {
+    transform: scale(0.3);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+.feedback.listening.hearing .listen-rings i {
+  border-width: 5px;
+  animation-duration: 0.9s;
 }
 
 /* ---------- staff ---------- */
@@ -558,14 +669,6 @@ button {
 .feedback.reveal {
   background: var(--good-soft);
   color: #064e1f;
-}
-.feedback.listening .feedback-icon {
-  opacity: 0.45;
-  transition: transform 0.1s, opacity 0.1s;
-}
-.feedback.listening.hearing .feedback-icon {
-  opacity: 1;
-  transform: scale(1.15);
 }
 .jump {
   animation: jump 0.5s ease-out 2 alternate;

@@ -7,7 +7,6 @@ const KEY = 'notefish:v1';
 
 interface Saved {
   a4Hz?: number;
-  calibrationOffered?: boolean;
   bestStars?: Record<number, number>;
 }
 
@@ -34,14 +33,6 @@ export function getA4(): number {
 
 export function setA4(a4Hz: number): void {
   save({ a4Hz });
-}
-
-export function wasCalibrationOffered(): boolean {
-  return load().calibrationOffered === true;
-}
-
-export function markCalibrationOffered(): void {
-  save({ calibrationOffered: true });
 }
 
 export function getBestStars(): Record<number, number> {

@@ -12,7 +12,7 @@ Built for an iPad or iPhone propped on the piano's music stand. Runs entirely in
 - Pitch detection with the McLeod Pitch Method (MPM), running in an `AudioWorklet`.
 - Onset detection (RMS jump over an adaptive noise floor, with a refractory period) so each key press is judged once.
 - Octave-error guard: sub-harmonic energy checks catch the "heard the 2nd or 3rd harmonic" mistakes pianos are prone to.
-- Tolerant of out-of-tune pianos: a note is correct within ±50 cents, and an optional calibration ("play the A in the middle of the piano") shifts the reference so even a piano that sits flat overall scores correctly.
+- Tolerant of out-of-tune pianos: a note is correct within ±50 cents, and an optional tune-up under Options (gear icon on the home screen: "play the A in the middle of the piano") shifts the reference for very out-of-tune pianos.
 - Six levels by range, rounds of 10 notes, up to 3 tries per note, stars for first-try accuracy, best stars saved per level.
 - On-screen mini keyboard (C3 to C5) that shows where the child landed and, after a miss, where the target is.
 - Debug overlay for real-device testing: add `?debug=1` to the URL, or tap the title five times quickly.

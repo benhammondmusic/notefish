@@ -2,14 +2,16 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { engine } from './audio/engine';
 import { LEVELS, ROUND_LENGTH, starsFor } from './music/levels';
 import * as storage from './game/storage';
+import { DEFAULT_A4_HZ } from './music/notes';
 import { PlayScreen } from './components/PlayScreen';
 import { CalibrateScreen } from './components/CalibrateScreen';
 import { DebugOverlay } from './components/DebugOverlay';
-import { EndScreen, HomeScreen, MessageScreen, type Problem } from './components/screens';
+import { EndScreen, HomeScreen, MessageScreen, OptionsScreen, type Problem } from './components/screens';
 
 type Screen =
   | { name: 'home' }
-  | { name: 'calibrate'; thenLevel: number | null }
+  | { name: 'options' }
+  | { name: 'calibrate' }
   | { name: 'play'; levelId: number; key: number }
   | { name: 'end'; levelId: number; firstTry: number; stars: number }
   | { name: 'message'; problem: Problem; retry: Screen };
@@ -26,23 +28,9 @@ export function App() {
   // When the tab comes back after the mic was released, ask for a tap.
   useEffect(() => engine.onStatus((s) => setPaused(s === 'paused')), []);
 
-  /**
-   * Start audio (must run inside the tap handler) and then go to `next`.
-   * Offers the tune-up once, the first time a game is started.
-   */
+  /** Start audio (must run inside the tap handler) and then go to `next`. */
   const startThen = (next: Screen) => {
-    void engine.start().then((r) => {
-      if (!r.ok) {
-        setScreen({ name: 'message', problem: r.reason, retry: next });
-        return;
-      }
-      if (next.name === 'play' && !storage.wasCalibrationOffered()) {
-        storage.markCalibrationOffered();
-        setScreen({ name: 'calibrate', thenLevel: next.levelId });
-        return;
-      }
-      setScreen(next);
-    });
+    void engine.start().then((r) => setScreen(r.ok ? next : { name: 'message', problem: r.reason, retry: next }));
   };
 
   const play = (levelId: number) => startThen({ name: 'play', levelId, key: Date.now() });
@@ -58,9 +46,6 @@ export function App() {
     [],
   );
 
-  const afterCalibration = (thenLevel: number | null) =>
-    setScreen(thenLevel ? { name: 'play', levelId: thenLevel, key: Date.now() } : { name: 'home' });
-
   let content: ReactNode;
   switch (screen.name) {
     case 'home':
@@ -68,8 +53,21 @@ export function App() {
         <HomeScreen
           bestStars={bestStars}
           onPlay={play}
-          onTune={() => startThen({ name: 'calibrate', thenLevel: null })}
+          onOptions={() => setScreen({ name: 'options' })}
           onSecretTap={() => setDebug((d) => !d)}
+        />
+      );
+      break;
+    case 'options':
+      content = (
+        <OptionsScreen
+          a4Hz={a4Hz}
+          onTune={() => startThen({ name: 'calibrate' })}
+          onReset={() => {
+            storage.setA4(DEFAULT_A4_HZ);
+            setA4Hz(DEFAULT_A4_HZ);
+          }}
+          onBack={() => setScreen({ name: 'home' })}
         />
       );
       break;
@@ -79,9 +77,9 @@ export function App() {
           onSave={(hz) => {
             storage.setA4(hz);
             setA4Hz(hz);
-            afterCalibration(screen.thenLevel);
+            setScreen({ name: 'options' });
           }}
-          onSkip={() => afterCalibration(screen.thenLevel)}
+          onCancel={() => setScreen({ name: 'options' })}
         />
       );
       break;
